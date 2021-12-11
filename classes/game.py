@@ -79,8 +79,9 @@ class Person:
         i = 1
         print("\n" + bcolors.FAIL + bcolors.BOLD + "TARGET:" + bcolors.ENDC)
         for enemy in enemys:
-            print("   " + str(i) + ".", enemy.name)
-            i += 1
+            if enemy.get_hp() != 0:
+                print("   " + str(i) + ".", enemy.name)
+                i += 1
         choice = int(input("Choose the target: ")) - 1
         return choice
 
@@ -164,3 +165,15 @@ class Person:
         print(bcolors.BOLD + bcolors.FAIL + "NAME                   HP" + bcolors.ENDC)
         print(bcolors.BOLD + bcolors.FAIL + "                        _________________________" + bcolors.ENDC)
         print(bcolors.BOLD + bcolors.FAIL + self.name + "    " + current_hp + " |" + hp_bar + "|" + bcolors.ENDC)
+
+    def choose_enemy_spell(self):
+        magic_choice = random.randrange(0, len(self.magic))
+        spell = self.magic[magic_choice]
+        magic_dmg = spell.generate_damage()
+
+        persent = self.hp / self.maxhp * 100
+
+        if self.mp < spell.cost or spell.type == "white" and persent > 50:
+            self.choose_enemy_spell()
+        else:
+            return spell, magic_dmg
